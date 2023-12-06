@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../style1.css" />
+    <style>
+      body {
+        background: #dde1e7;
+      }
+      .container {
+        max-width: 1340px;
+        margin: auto;
+      }
+      #box {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 16px;
+      }
+      #box div {
+        background: #dde1e7;
+        border-radius: 10px;
+        box-shadow: -3px -3px 7px #ffffff73,
+          2px 2px 5px rgba(94, 104, 121, 0.288);
+        margin-left: 20px;
+        padding: 15px;
+        margin-bottom: 40px;
+      }
+      #box div img {
+        width: 325px;
+        height: 280px;
+        display: block;
+        margin: auto;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      .boxes {
+        display: flex;
+      }
+      .box1 {
+        width: 60%;
+      }
+      .box2 {
+        width: 40%;
+        margin-left: 230px;
+      }
+      #box div h1 {
+        font-size: 29px;
+        padding-top: 23px;
+        padding-left: 10px;
+      }
+      #box div h6 {
+        font-size: 21px;
+        padding-top: 11px;
+        padding-left: 10px;
+      }
+      #box div h3 {
+        font-size: 20px;
+        padding-top: 12px;
+        padding-left: 10px;
+      }
+      #box div button {
+        box-shadow: 2px 2px 5px #babecc, -5px -5px 10px #ffffff73;
+        font-size: 18px;
+        line-height: 50px;
+        font-weight: 600;
+        background: #dde1e7;
+        border-radius: 25px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: #595959;
+        width: 90%;
+        height: 50px;
+        display: block;
+        margin: 26px auto;
+      }
+      #box div button:focus {
+        color: #3498db;
+        box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff73;
+      }
+      .box2 .profileimage {
+        width: 150px;
+        margin-top: 40px;
+        padding-bottom: 15px;
+        box-shadow: 2px 2px 5px #babecc, -5px -5px 10px #ffffff73;
+      }
+      #userprofile div h1 {
+        font-size: 27px;
+        margin-left: 20px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("nav")%>
+
+    <div class="container">
+      <div class="boxes">
+        <div class="box1">
+          <div id="box"></div>
+        </div>
+        <div class="box2">
+          <img
+            src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/43412/person-emoji-clipart-md.png"
+            class="profileimage"
+            alt=""
+          />
+          <div id="userprofile"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      fetch("/product/products")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          display(data);
+        });
+
+      const display = (data) => {
+        document.getElementById("box").innerHTML = "";
+        data.map((ele) => {
+          // console.log(data);
+          let img = document.createElement("img");
+          img.src = ele.img;
+          let title = document.createElement("h1");
+          title.innerHTML = `Title : ${ele.title}`;
+          let des = document.createElement("h6");
+          des.innerHTML = `desc : ${ele.des}`;
+          let price = document.createElement("h3");
+          price.innerHTML = ` Price : ${ele.price}`;
+          let btn1 = document.createElement("button");
+          btn1.innerHTML = "Add To Cart";
+          btn1.addEventListener("click", () => cart(ele._id));
+
+          const cart = (id) => {
+            console.log(id);
+            fetch(`/product/cart/${id}`, {
+              method: "POST",
+              headers: { "Content-type": "application/json " },
+              body: JSON.stringify({ productID: id }),
+            })
+              .then((response) => response.json())
+              .then((data) => console.log(data));
+          };
+
+          let div = document.createElement("div");
+          div.append(img, title, des, price, btn1);
+          document.getElementById("box").append(div);
+        });
+      };
+
+      fetch("/product/all")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          display(data);
+        });
+
+      fetch("/user/usera")
+        .then((res) => res.json())
+        .then((data) => {
+          data.map((ele) => {
+            let username = document.createElement("h1");
+            username.innerHTML = ele.username;
+            let div = document.createElement("div");
+            div.append(username);
+            document.getElementById("userprofile").append(div);
+          });
+        });
+    </script>
+  </body>
+</html>

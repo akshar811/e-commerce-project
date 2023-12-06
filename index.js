@@ -3,6 +3,7 @@ const connect = require("./config/db");
 const userRouter = require("./routes/user");
 const cookies = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const productRoutes = require("./routes/product");
 
 require("dotenv").config();
 const app = express();
@@ -15,6 +16,11 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 
 app.use("/user", userRouter);
+app.use("/product",productRoutes);
+
+app.get("/",(req,res)=>{
+  res.redirect("/product/products");
+})
 
 app.listen(process.env.PORT, () => {
   connect();

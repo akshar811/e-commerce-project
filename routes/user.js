@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { displayreg, register, displaylogin, login, product } = require("../controllers/user.controller");
+const { displayreg, register, displaylogin, login, usera } = require("../controllers/user.controller");
 const Auth = require("../middleware/auth");
 
 const userRouter = Router();
@@ -12,7 +12,6 @@ userRouter.get("/login",displaylogin);
 
 userRouter.post("/login",login);
 
-userRouter.get("/product",Auth,product)
-
+userRouter.get("/usera",usera);
 module.exports = userRouter;
 

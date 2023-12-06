@@ -12,7 +12,7 @@ const register = async (req, res) => {
   const User = await user.findOne({ email });
 
   if (User) {
-    return res.json({ msg: "Email ID already exists" });
+    return res.redirect("/user/login");
   }
 
   bcrypt.hash(password, 10, async (err, hash) => {
@@ -22,7 +22,9 @@ const register = async (req, res) => {
       password: hash,
     };
     let val = await user.create(obj);
-    res.json({ msg: "user created successfully", data: val });
+    let token = jwt.sign({ id: val.id }, "token");
+    res.cookie("token", token);
+    res.redirect(  "/user/login" );
   });
 };
 
@@ -38,7 +40,7 @@ const login = async (req, res) => {
       if (result) {
         let token = jwt.sign({ id: data._id }, "token");
         res.cookie("token", token);
-        res.redirect("/user/product");
+        res.redirect("/product/pro");
       } else {
         res.send({ msg: "Password incorrect" });
       }
@@ -48,8 +50,8 @@ const login = async (req, res) => {
   }
 };
 
-const product = (req, res) => {
-  res.render("product");
-};
-
-module.exports = { displayreg, register, displaylogin, login, product };
+const usera =async (req, res) => {
+  let data = await user.find();
+  res.send(data);
+}
+module.exports = { displayreg, register, displaylogin, login ,usera };

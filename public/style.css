@@ -6,9 +6,7 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-html,body{
-  height: 100%;
-}
+
 body{
   display: grid;
   place-items: center;
@@ -22,6 +20,7 @@ body{
   border-radius: 10px;
   box-shadow: -3px -3px 7px #ffffff73,
                2px 2px 5px rgba(94,104,121,0.288);
+               margin-top: 60px;
 }
 .content .text{
   font-size: 33px;
@@ -35,7 +34,7 @@ body{
   display: flex;
   position: relative;
 }
-.field:nth-child(2){
+.field:nth-child(2),.field:nth-child(3){
   margin-top: 27px;
 }
 .field input{
@@ -50,6 +49,7 @@ body{
   border-radius: 25px;
   box-shadow: inset 2px 2px 5px #BABECC,
               inset -5px -5px 10px #ffffff73;
+              font-weight: 500;
 }
 .field input:focus{
   box-shadow: inset 1px 1px 2px #BABECC,
@@ -81,6 +81,20 @@ body{
   color: #3498db;
   text-decoration: none;
 }
+.mt{
+  margin-top: 33px;
+}
+.icons{
+  margin-left: -281px;
+  margin-top: 19px;
+  color: #595959 !important;
+  opacity: 0.6;
+}
+svg {
+  height: 16;
+  width: 16;
+  color: #595959 !important;
+}
 .forgot-pass:hover a{
   text-decoration: underline;
 }
@@ -104,4 +118,7 @@ button:focus{
   color: #3498db;
   box-shadow: inset 2px 2px 5px #BABECC,
              inset -5px -5px 10px #ffffff73;
+}
+.ft1{
+  color: #595959;
 }
