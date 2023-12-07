@@ -54,4 +54,10 @@ const usera =async (req, res) => {
   let data = await user.find();
   res.send(data);
 }
-module.exports = { displayreg, register, displaylogin, login ,usera };
+
+
+const profile = (req, res) => {
+  res.render("profile");
+}
+
+module.exports = { displayreg, register, displaylogin, login ,usera,profile };

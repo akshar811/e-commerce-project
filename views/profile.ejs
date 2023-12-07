@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Profile Page</title>
     <link rel="stylesheet" href="../style1.css" />
     <style>
       body {
@@ -27,7 +27,6 @@
         padding: 15px;
         margin-bottom: 40px;
         /* width: 330px; */
-  
       }
       #box div img {
         /* width: 325px; */
@@ -76,6 +75,7 @@
   </head>
   <body>
     <%- include("nav")%>
+
     <div class="container">
       <div id="box"></div>
     </div>
@@ -88,10 +88,25 @@
           display(data);
         });
 
+      const pro_delete = (id) => {
+        fetch(`/product/delete/${id}`, {
+          method: "delete",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const deletedElement = document.getElementById(id);
+            if (deletedElement) {
+              deletedElement.remove();
+            }
+            console.log(data);
+          })
+          .catch((error) => console.error(error));
+      };
+
       const display = (data) => {
-        document.getElementById("box").innerHTML = "";
+        document.getElementById("box").innerHTML = " ";
         data.map((ele) => {
-          console.log(data);
+          // console.log(data);
           let img = document.createElement("img");
           img.src = ele.img;
           let title = document.createElement("h1");
@@ -101,32 +116,14 @@
           let price = document.createElement("h3");
           price.innerHTML = ` Price : ${ele.price}`;
           let btn1 = document.createElement("button");
-          btn1.innerHTML = "Add To Cart";
-          btn1.addEventListener("click", () => cart(ele._id));
-
-          const cart = (id) => {
-            console.log(id);
-            fetch(`/product/cart/${id}`, {
-              method: "POST",
-              headers: { "Content-type": "application/json " },
-              body: JSON.stringify({ productID: id }),
-            })
-              .then((response) => response.json())
-              .then((data) => console.log(data));
-          };
-
+          btn1.innerHTML = "delete";
+          btn1.addEventListener("click", () => pro_delete(ele._id));
           let div = document.createElement("div");
+          div.id = ele._id;
           div.append(img, title, des, price, btn1);
           document.getElementById("box").append(div);
         });
       };
-
-      fetch("/product/all")
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          display(data);
-        });
     </script>
   </body>
 </html>

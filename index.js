@@ -16,11 +16,11 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 
 app.use("/user", userRouter);
-app.use("/product",productRoutes);
+app.use("/product", productRoutes);
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.redirect("/product/products");
-})
+});
 
 app.listen(process.env.PORT, () => {
   connect();

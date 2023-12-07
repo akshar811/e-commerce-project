@@ -11,7 +11,7 @@ const Product = async (req, res) => {
 };
 
 const Products = async (req, res) => {
-  let data = await product.find({ userID: req.cookies.id });
+  let data = await product.find({ userID : req.body.userID });
   res.json(data);
 };
 
@@ -31,4 +31,12 @@ const Cart = async (req, res) => {
     let data = await cart.create(req.body);
     res.send(data);
 }
-module.exports = { displayproduct, Product, Products, dproduct , all , Cart};
+
+const deletepro = async (req, res) => {
+  await product.findByIdAndDelete(req.params.id)
+  let data = await product.find({ userID : req.body.userID });
+  res.json(data);
+}
+
+
+module.exports = { displayproduct, Product, Products, dproduct , all , Cart , deletepro };
