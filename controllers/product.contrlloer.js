@@ -38,5 +38,16 @@ const deletepro = async (req, res) => {
   res.json(data);
 }
 
+const pro_cart = async (req, res) => {
+  let data = await cart.find({ userID : req.body.userID }).populate("productID")
+  res.send(data);
+}
 
-module.exports = { displayproduct, Product, Products, dproduct , all , Cart , deletepro };
+
+
+const displaycartpage =  (req, res) => {
+  res.render("cart")
+}
+
+
+module.exports = { displayproduct, Product, Products, dproduct , all , Cart , deletepro , pro_cart , displaycartpage };

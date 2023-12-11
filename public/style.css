@@ -122,3 +122,6 @@ button:focus{
 .ft1{
   color: #595959;
 }
+.center{
+  margin:180px auto;
+}
