@@ -72,12 +72,29 @@
         padding-right: 90px;
         letter-spacing: 1.3px;
         border-top: 2px solid #ccc;
-        padding-top: 50px;
+        padding-top: 60px;
         border-width: 100%;
+      }
+      #box #payment {
+        display: block;
+        margin-left: 920px;
+        margin-top: 48px;
+        padding: 17px 65px;
+        border-radius: 3px;
+        border: none;
+        font-size: 20px;
+        letter-spacing: 1px;
+        margin-bottom: 40px;
+        box-shadow: 2px 2px 5px #babecc, -5px -5px 10px #ffffff73;
+      }
+      #box #payment:focus {
+        color: #3498db;
+        box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff73;
       }
     </style>
   </head>
   <body>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <%- include("nav")%>
     <div class="container">
       <h1 class="title">Shopping Bag</h1>
@@ -94,6 +111,39 @@
         .then((response) => response.json())
         .then((response) => window.location.reload())
         .then((error) => console.log(error));
+    };
+
+    const handlepayment = async (amount) => {
+      let res = await fetch(`/product/payment`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ amount: amount }),
+      });
+      let order = await res.json();
+      console.log(order);
+
+      let options = {
+        key: "rzp_test_f7wiC1C4sLM0Ix",
+        amount: order.amount,
+      };
+      let rpay = new Razorpay(options);
+      rpay.open();
+    };
+
+    const allprodelete = async () => {
+      try {
+        let res = await fetch(`/product/deleteAll`, {
+          method: "DELETE",
+          headers: { "content-type": "application/json" },
+      // Assuming you have a user ID in your client-side data
+      body: JSON.stringify({ userID: userID }),
+        });
+
+        let data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     let tprice = 0;
@@ -128,7 +178,15 @@
 
       let pricebtn = document.createElement("h5");
       pricebtn.innerHTML = `Total price : ${tprice}`;
-      document.getElementById("box").append(pricebtn);
+      let paymentbtn = document.createElement("button");
+      paymentbtn.setAttribute("id", "payment");
+      paymentbtn.innerHTML = "Checkout";
+      paymentbtn.addEventListener("click", async () => {
+        await allprodelete();
+        handlepayment(tprice);
+      });
+
+      document.getElementById("box").append(pricebtn, paymentbtn);
     };
 
     function get() {

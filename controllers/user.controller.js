@@ -4,7 +4,7 @@ const cookies = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const otpgenerator = require("otp-generator");
-
+const newpass = require("../models/user.schema");
 
 const displayreg = (req, res) => {
   res.render("signup");
@@ -106,38 +106,28 @@ const verify = (req, res) => {
   }
 };
 
-
 const forgetpass = (req, res) => {
-  res.render("forgetpass")
-}
-
-const newpassword = (req, res) => {
-  res.render("newpassword")
-}
-
-
-const updatepassword = async (req, res) => {
-  const { oldpassword, newpassword } = req.body;
-
-  try { 
-    const user = await User.findOne({ email: req.user.email });
-
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    if (oldpassword !== user.password) {
-      return res.status(401).send("Incorrect old password");
-    }
-
-    user.password = newpassword;
-    await user.save();
-
-    res.send("Password updated successfully");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
-  }
+  res.render("forgetpass");
 };
 
-module.exports = { displayreg, register, displaylogin, login ,usera,profile,resetpass , verify  ,forgetpass , newpassword , updatepassword };
+const newpassword = (req, res) => {
+  res.render("newpassword");
+};
+
+const updatepassword = async (req, res) => {
+ 
+};
+
+module.exports = {
+  displayreg,
+  register,
+  displaylogin,
+  login,
+  usera,
+  profile,
+  resetpass,
+  verify,
+  forgetpass,
+  newpassword,
+  updatepassword,
+};

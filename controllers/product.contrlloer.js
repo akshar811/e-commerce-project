@@ -1,5 +1,6 @@
 const cart = require("../models/cart.schema");
 const product = require("../models/product.schema");
+const Razorpay = require("razorpay");
 
 const displayproduct = (req, res) => {
   res.render("product");
@@ -65,5 +66,33 @@ const addqty =async (req, res) => {
 
 }
 
+//payment
 
-module.exports = { displayproduct, Product, Products, dproduct , all , Cart , deletepro , pro_cart , displaycartpage , addqty};
+let razorpay = new Razorpay ({
+  key_id:"rzp_test_f7wiC1C4sLM0Ix",
+  key_secret: "Bjeb0koGoTg3Y6jJNpqegZ34",
+});
+
+const payment = (req, res) => {
+   let {amount}= req.body
+   let options = {
+     amount : amount * 100,
+   }
+   razorpay.orders.create(options , (err, order) => {
+    if (err){
+     console.log(err);
+     res.send({data: err.message});
+    }
+    else{
+      res.send(order);
+    }
+   });
+};
+
+const deleteallpro =async (req, res) => {
+  await product.deleteMany({ userID: req.body.userID });
+  let data = await product.find({ userID : req.body.userID });
+  res.json(data);
+}
+
+module.exports = { displayproduct, Product, Products, dproduct , all , Cart , deletepro , pro_cart , displaycartpage , addqty,payment , deleteallpro};
