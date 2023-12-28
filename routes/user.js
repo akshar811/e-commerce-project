@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { displayreg, register, displaylogin, login, profile, resetpass, verify, forgetpass, newpassword, updatepassword } = require("../controllers/user.controller");
 const Auth = require("../middleware/auth");
 
+
 const userRouter = Router();
 
 userRouter.get("/reg",displayreg);
@@ -25,4 +26,6 @@ userRouter.get("/newpass",newpassword);
 userRouter.post("/newpass",updatepassword);
 
 module.exports = userRouter;
+
+
 

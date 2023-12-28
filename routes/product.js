@@ -1,5 +1,5 @@
 const {Router }= require("express");
-const { displayproduct, Product, Products, dproduct, all, Cart, deletepro, pro_cart, displaycartpage, addqty, payment, deleteallpro } = require("../controllers/product.contrlloer");
+const { displayproduct, Product, Products, dproduct, all, Cart, deletepro, pro_cart, displaycartpage, addqty, payment } = require("../controllers/product.contrlloer");
 const Auth = require("../middleware/auth");
 
 const productRoutes = Router()
@@ -14,9 +14,9 @@ productRoutes.get("/",dproduct);
 
 productRoutes.get("/all",all);
 
-productRoutes.post("/cart/:id",Auth,Cart);
-
 productRoutes.delete("/delete/:id",Auth,deletepro);
+
+productRoutes.post("/cart/:id",Auth,Cart);
 
 productRoutes.get("/cartdata",Auth,pro_cart);
 
@@ -26,6 +26,5 @@ productRoutes.patch("/cart/update/:id",Auth,addqty);
 
 productRoutes.post("/payment",Auth,payment);
 
-productRoutes.delete("/deleteAll/:id",deleteallpro)
-
 module.exports = productRoutes   
+

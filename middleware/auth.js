@@ -8,8 +8,9 @@ const Auth = (req, res, next) => {
     req.body.userID = decode.id
     next();
   } else {
-    res.send({ msg: "user not logged in" });
+    res.redirect("/user/login");
   }
 };
 
 module.exports = Auth;
+

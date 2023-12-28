@@ -4,7 +4,6 @@ const cookies = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const otpgenerator = require("otp-generator");
-const newpass = require("../models/user.schema");
 
 const displayreg = (req, res) => {
   res.render("signup");
@@ -23,6 +22,7 @@ const register = async (req, res) => {
       username: username,
       email: email,
       password: hash,
+      img: req.file.originalname,
     };
     let val = await user.create(obj);
     let token = jwt.sign({ id: val.id }, "token");
@@ -72,28 +72,34 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-let otp;
+let otp = otpgenerator.generate(6, {
+  upperCaseAlphabets: false,
+  specialChars: false,
+  lowerCaseAlphabets: false,
+});
 
-const resetpass = (req, res) => {
-  otp = otpgenerator.generate(6, {
-    upperCaseAlphabets: false,
-    specialChars: false,
-  });
+const resetpass = async (req, res) => {
   let { email } = req.body;
-  const mailoptions = {
-    from: "aksharambaliya6@gmail.com",
-    to: email,
-    subject: "password reset",
-    html: `<a href=http://localhost:8080/user/verify/${otp}>click here to verify otp ${otp}</a>`,
-  };
-  transporter.sendMail(mailoptions, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(info);
-    }
-  });
-  res.send("sending otp");
+  let User = await user.findOne({ email });
+
+  if (User) {
+    const mailoption = {
+      from: "aksharambaliya6@gmail.com",
+      to: email,
+      subject: "password reset",
+      html: `<a href=http://localhost:8080/user/verify/${otp}>click here to verify otp ${otp}</a>`,
+    };
+    transporter.sendMail(mailoption, (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("check your password");
+      }
+    });
+    res.cookie("userId", User.id).send("sending otp");
+  } else {
+    res.send("user not found");
+  }
 };
 
 const verify = (req, res) => {
@@ -115,7 +121,17 @@ const newpassword = (req, res) => {
 };
 
 const updatepassword = async (req, res) => {
- 
+  let id = req.cookies.userId;
+  let { password } = req.body;
+  console.log(id, password);
+  bcrypt.hash(password, 5, async (err, hash) => {
+    let data = await user.findByIdAndUpdate(id, { password: hash });
+
+    console.log("data", data);
+    data = await user.findById(id);
+    console.log(data);
+    res.send("data");
+  });
 };
 
 module.exports = {

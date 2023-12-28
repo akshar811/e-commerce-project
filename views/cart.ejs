@@ -95,6 +95,7 @@
   </head>
   <body>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <%- include("nav")%>
     <div class="container">
       <h1 class="title">Shopping Bag</h1>
@@ -110,7 +111,7 @@
       })
         .then((response) => response.json())
         .then((response) => window.location.reload())
-        .then((error) => console.log(error));
+        .catch((error) => console.log(error));
     };
 
     const handlepayment = async (amount) => {
@@ -123,35 +124,21 @@
       console.log(order);
 
       let options = {
-        key: "rzp_test_f7wiC1C4sLM0Ix",
+        key: "rzp_test_DeoEs4hmmDeH2T",
         amount: order.amount,
       };
       let rpay = new Razorpay(options);
       rpay.open();
     };
 
-    const allprodelete = async () => {
-      try {
-        let res = await fetch(`/product/deleteAll`, {
-          method: "DELETE",
-          headers: { "content-type": "application/json" },
-      // Assuming you have a user ID in your client-side data
-      body: JSON.stringify({ userID: userID }),
-        });
-
-        let data = await res.json();
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+   
 
     let tprice = 0;
     const display = (data) => {
       document.getElementById("box").innerHTML = "";
       data.map((element) => {
-        let ele = element.productID;
-        tprice = Number(tprice) + Number(ele.price) * element.qty;
+        let ele = element.productID
+        tprice = Number(tprice) + Number(ele.price) * element.qty
         let img = document.createElement("img");
         img.src = ele.img;
         let title = document.createElement("h1");
@@ -182,7 +169,6 @@
       paymentbtn.setAttribute("id", "payment");
       paymentbtn.innerHTML = "Checkout";
       paymentbtn.addEventListener("click", async () => {
-        await allprodelete();
         handlepayment(tprice);
       });
 
@@ -195,6 +181,7 @@
         .then((data) => display(data))
         .then((error) => console.log(error));
     }
+
     get();
   </script>
 </html>

@@ -7,12 +7,13 @@ const displayproduct = (req, res) => {
 };
 
 const Product = async (req, res) => {
-  let productcreate = await product.create(req.body);
-  res.send({ data: productcreate });
+  let { title, des, price, img } = req.body;
+  const data = await product.create(req.body);
+  res.send({ msg: "product added succesfully", data });
 };
 
 const Products = async (req, res) => {
-  let data = await product.find({ userID : req.body.userID });
+  let data = await product.find({ userID: req.body.userID });
   res.json(data);
 };
 
@@ -20,79 +21,82 @@ const dproduct = (req, res) => {
   res.render("products");
 };
 
-const all = async(req, res) => {
-   let data = await product.find()
-   res.send(data);
-}
+const all = async (req, res) => {
+  let data = await product.find();
+  res.send(data);
+};
 
+// delte product
+const deletepro = async (req, res) => {
+  await product.findByIdAndDelete(req.params.id);
+  let data = await product.find({ userID: req.body.userID });
+  res.json(data);
+};
 
 //cart
 
 const Cart = async (req, res) => {
-    let data = await cart.create(req.body);
-    res.send(data);
-}
-
-const deletepro = async (req, res) => {
-  await product.findByIdAndDelete(req.params.id)
-  let data = await product.find({ userID : req.body.userID });
-  res.json(data);
-}
+  let data = await cart.create(req.body);
+  res.send(data);
+};
 
 const pro_cart = async (req, res) => {
-  let data = await cart.find({ userID : req.body.userID }).populate("productID")
+  let data = await cart.find({ userID: req.body.userID }).populate("productID");
   res.send(data);
-}
+};
 
+const displaycartpage = (req, res) => {
+  res.render("cart");
+};
 
-const displaycartpage =  (req, res) => {
-  res.render("cart")
-}
+const addqty = async (req, res) => {
+  let { id } = req.params;
+  let { val } = req.body;
+  let data = await cart.findById(id);
 
-const addqty =async (req, res) => {
-  let {id}=req.params
-  let {val}=req.body
-  let data = await cart.findById(id)
-
-  if(data.qty == 1 && val == -1){
+  if (data.qty == 1 && val == -1) {
     await cart.findByIdAndDelete(id);
 
-    return res.send({status : "success"});
+    return res.send({ status: "success" });
   }
 
   data.qty = data.qty + val;
-  await data.save()
+  await data.save();
   res.send(data);
-
-}
+};
 
 //payment
 
-let razorpay = new Razorpay ({
-  key_id:"rzp_test_f7wiC1C4sLM0Ix",
-  key_secret: "Bjeb0koGoTg3Y6jJNpqegZ34",
+let razorpay = new Razorpay({
+  key_id: "rzp_test_DeoEs4hmmDeH2T",
+  key_secret: "1Sxh59NSIfb9dwYZyONVYlJD",
 });
 
 const payment = (req, res) => {
-   let {amount}= req.body
-   let options = {
-     amount : amount * 100,
-   }
-   razorpay.orders.create(options , (err, order) => {
-    if (err){
-     console.log(err);
-     res.send({data: err.message});
-    }
-    else{
+  let { amount } = req.body;
+  let options = {
+    amount: amount * 100,
+  };
+  razorpay.orders.create(options, (err, order) => {
+    if (err) {
+      console.log(err);
+      res.send({ data: err.message });
+    } else {
       res.send(order);
     }
-   });
+  });
 };
 
-const deleteallpro =async (req, res) => {
-  await product.deleteMany({ userID: req.body.userID });
-  let data = await product.find({ userID : req.body.userID });
-  res.json(data);
-}
-
-module.exports = { displayproduct, Product, Products, dproduct , all , Cart , deletepro , pro_cart , displaycartpage , addqty,payment , deleteallpro};
+module.exports = {
+  displayproduct,
+  Product,
+  Products,
+  dproduct,
+  all,
+  Cart,
+  deletepro,
+  pro_cart,
+  displaycartpage,
+  addqty,
+  payment,
+};

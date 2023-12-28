@@ -5,4 +5,5 @@ const connect = async ()=>{
     console.log("connect database")
 }
 
-module.exports = connect
+module.exports = connect         
+
